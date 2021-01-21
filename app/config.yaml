@@ -1,0 +1,4 @@
+imports:
+    - { resource: '@EMOPaymentStatementParserBundle/Resources/config/services.yaml' }
+framework:
+    secret: test

@@ -1,0 +1,8 @@
+.idea
+/vendor
+.phpunit.result.cache
+/var
+
+###> docker-compose ###
+/docker-compose.override.yaml
+###< docker-compose ###

@@ -1,0 +1,59 @@
+{
+    "name": "emokykla/payment-statement-parser-bundle",
+    "type": "symfony-bundle",
+    "license": "UNLICENSED",
+    "authors": [
+        {
+            "name": "Aurelijus Rožėnas",
+            "email": "aurelijus.rozenas@gmail.com"
+        },
+        {
+            "name": "Paulius Lukošiūnas",
+            "email": "pauliuslukosiunas@gmail.com"
+        },
+        {
+            "name": "Darius Ratkevičius",
+            "email": "darius@ratkevicius.lt"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:emokykla/coding-standards.git"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "symfony/serializer": "4.4.2",
+        "symfony/validator": "4.4.2"
+    },
+    "require-dev": {
+        "emokykla/coding-standards": "^1.0",
+        "kint-php/kint": "^3.3",
+        "liip/functional-test-bundle": "^4.2",
+        "phpunit/phpunit": "^8.0",
+        "roave/security-advisories": "dev-master",
+        "symfony/framework-bundle": "4.4.2",
+        "symfony/yaml": "^5.2"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "EMO\\PaymentStatementParserBundle\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "files": [
+            "app/AppKernel.php",
+            "app/kint_config.php"
+        ],
+        "psr-4": {
+            "EMO\\PaymentStatementParserBundle\\Tests\\": "tests/"
+        }
+    }
+}

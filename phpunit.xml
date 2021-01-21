@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/8.5/phpunit.xsd"
+>
+    <testsuites>
+        <testsuite name="All tests">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <php>
+        <server name="KERNEL_CLASS" value="\AppKernel"/>
+        <!-- This is needed to disable failing on deprecated notices -->
+<!--        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>-->
+        <ini name="memory_limit" value="1G"/>
+    </php>
+
+    <filter>
+        <whitelist>
+            <directory>./src</directory>
+            <exclude>
+                <directory>./src/Resources/</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
