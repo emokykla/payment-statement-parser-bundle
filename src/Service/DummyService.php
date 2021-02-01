@@ -9,7 +9,5 @@ class DummyService
     public function getString(): string
     {
         return 'asd';
-
-        return 'max';
     }
 }
