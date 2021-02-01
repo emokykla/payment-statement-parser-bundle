@@ -1,0 +1,4 @@
+name: build-docker-image
+on: [ push ]
+jobs:
+    build:
