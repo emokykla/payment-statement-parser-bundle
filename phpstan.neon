@@ -1,0 +1,20 @@
+# All options here https://github.com/phpstan/phpstan
+# Install "NEON support" plugin fore code colouring in PhpStorm
+# %rootDir% - root directory where PHPStan resides (i.e. vendor/phpstan/phpstan in Composer installation)
+# %currentWorkingDirectory% - current working directory where PHPStan was executed
+parameters:
+    level: max # 0-7, max
+#    excludes_analyse:
+#        - %currentWorkingDirectory%/src/UtilsBundle/Globals/DebugFunctions.php # Work only in dev
+    polluteCatchScopeWithTryAssignments: false
+#    ignoreErrors:
+#    # Makes helpers and global function shims visible to stan using auto discovery https://phpstan.org/user-guide/discovering-symbols
+#        # Debug
+#        - '#Function d invoked with .+ parameters|parameter, 0 required.#'
+#    scanDirectories:
+#         - %currentWorkingDirectory%/bundles/UtilsBundle/Globals
+    scanFiles:
+         - %currentWorkingDirectory%/app/kint_config.php
+    symfony:
+        container_xml_path: var/cache/test/appAppKernelTestDebugContainer.xml
+#        console_application_loader: phpstan/consoleApplication.php

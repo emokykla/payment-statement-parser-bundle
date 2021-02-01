@@ -1,4 +1,28 @@
-name: build-docker-image
-on: [ push ]
+name: Run checks
+on:
+    - push
+    - workflow_dispatch
 jobs:
     build:
+        runs-on: ubuntu-latest
+        steps:
+            -  uses: actions/checkout@v2
+            -  name: Build image 7.2
+               run: docker-compose -f docker-compose.yaml build --build-arg PHP_VERSION=7.2 php
+            # general checks
+            -  name: Check that there are no TODO items left in the code
+               run: docker-compose -f docker-compose.yaml run --rm php bin/find-todo.sh
+            # depends on symfony cache
+            -  name: Phpstan
+               run: docker-compose -f docker-compose.yaml run --rm php sh -c "bin/warmup-test-cache && bin/phpstan.sh"
+            # tests
+            -  name: Run tests on 7.2
+               run: docker-compose -f docker-compose.yaml run --rm php vendor/phpunit/phpunit/phpunit
+            -  name: Build image 7.3
+               run: docker-compose -f docker-compose.yaml build --build-arg PHP_VERSION=7.3 php
+            -  name: Run tests on 7.3
+               run: docker-compose -f docker-compose.yaml run --rm php vendor/phpunit/phpunit/phpunit
+            -  name: Build image 7.4
+               run: docker-compose -f docker-compose.yaml build --build-arg PHP_VERSION=7.4 php
+            -  name: Run tests on 7.4
+               run: docker-compose -f docker-compose.yaml run --rm php vendor/phpunit/phpunit/phpunit
