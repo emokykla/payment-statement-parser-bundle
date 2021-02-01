@@ -2,3 +2,12 @@ name: build-docker-image
 on: [ push ]
 jobs:
     build:
+        runs-on: ubuntu-latest
+        steps:
+            -  uses: actions/checkout@v2
+            -  name: Build image
+               run: docker-compose -f docker-compose.yaml build
+            -  name: Check todos
+               run: docker-compose -f docker-compose.yaml run php bin/find-todo.sh
+            -  name: Run test
+               run: docker-compose -f docker-compose.yaml run php vendor/phpunit/phpunit/phpunit
