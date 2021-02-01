@@ -9,13 +9,17 @@ jobs:
             -  uses: actions/checkout@v2
             -  name: Build image 7.2
                run: docker-compose -f docker-compose.yaml build --build-arg PHP_VERSION=7.2 php
+            # general checks
             -  name: Check todos
                run: docker-compose -f docker-compose.yaml run php bin/find-todo.sh
-            -  name: Run test
+            # tests
+            -  name: Run tests on 7.2
                run: docker-compose -f docker-compose.yaml run php vendor/phpunit/phpunit/phpunit
             -  name: Build image 7.3
                run: docker-compose -f docker-compose.yaml build --build-arg PHP_VERSION=7.3 php
-            -  name: Check todos
-               run: docker-compose -f docker-compose.yaml run php bin/find-todo.sh
-            -  name: Run test
+            -  name: Run tests on 7.3
+               run: docker-compose -f docker-compose.yaml run php vendor/phpunit/phpunit/phpunit
+            -  name: Build image 7.4
+               run: docker-compose -f docker-compose.yaml build --build-arg PHP_VERSION=7.4 php
+            -  name: Run tests on 7.4
                run: docker-compose -f docker-compose.yaml run php vendor/phpunit/phpunit/phpunit
