@@ -1,4 +1,4 @@
-name: build-docker-image
+name: Run checks
 on:
     - push
     - workflow_dispatch
@@ -7,8 +7,14 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             -  uses: actions/checkout@v2
-            -  name: Build image
-               run: docker-compose -f docker-compose.yaml build
+            -  name: Build image 7.2
+               run: docker-compose -f docker-compose.yaml build --build-arg PHP_VERSION=7.2 php
+            -  name: Check todos
+               run: docker-compose -f docker-compose.yaml run php bin/find-todo.sh
+            -  name: Run test
+               run: docker-compose -f docker-compose.yaml run php vendor/phpunit/phpunit/phpunit
+            -  name: Build image 7.3
+               run: docker-compose -f docker-compose.yaml build --build-arg PHP_VERSION=7.3 php
             -  name: Check todos
                run: docker-compose -f docker-compose.yaml run php bin/find-todo.sh
             -  name: Run test
