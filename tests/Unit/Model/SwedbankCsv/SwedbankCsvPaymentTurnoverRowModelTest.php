@@ -39,7 +39,7 @@ class SwedbankCsvPaymentTurnoverRowModelTest extends WebTestCase
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CLIENT_REFERENCE => $clientReference = '',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER => $documentNumber = '$documentNumber',
         ];
-        $swedbankCsvPaymentTurnoverRowModel = new SwedbankCsvPaymentTurnoverRowModel('line-1', $validRow);
+        $swedbankCsvPaymentTurnoverRowModel = new SwedbankCsvPaymentTurnoverRowModel('line-1', $validRow, '');
         $constraintViolationList = $swedbankCsvPaymentValidatorService->validatePaymentRow($swedbankCsvPaymentTurnoverRowModel);
         $violations = ViolationUtils::stringify($constraintViolationList);
         self::assertSame(

@@ -39,7 +39,7 @@ class SwedbankCsvPaymentAccruedInterestRowModelTest extends WebTestCase
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CLIENT_REFERENCE => $clientReference = '',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER => $documentNumber = '$documentNumber',
         ];
-        $swedbankCsvPaymentAccruedInterestRowModel = new SwedbankCsvPaymentAccruedInterestRowModel('line-1', $validRow);
+        $swedbankCsvPaymentAccruedInterestRowModel = new SwedbankCsvPaymentAccruedInterestRowModel('line-1', $validRow, '');
         $constraintViolationList = $swedbankCsvPaymentValidatorService->validatePaymentRow($swedbankCsvPaymentAccruedInterestRowModel);
         $violations = ViolationUtils::stringify($constraintViolationList);
         self::assertSame(

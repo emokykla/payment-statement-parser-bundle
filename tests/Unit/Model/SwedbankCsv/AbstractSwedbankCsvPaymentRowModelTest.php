@@ -45,9 +45,11 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CLIENT_REFERENCE => $clientReference = '$clientReference',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER => $documentNumber = '$documentNumber',
         ];
-        $swedbankCsvPaymentRowModel = new class ($lineId = 'line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+        $swedbankCsvPaymentRowModel = new class ($lineId = 'line-1', $row, $sourceString = 'source string') extends AbstractSwedbankCsvPaymentRowModel {
         };
         self::assertSame($lineId, $swedbankCsvPaymentRowModel->getLineId());
+        self::assertSame($row, $swedbankCsvPaymentRowModel->getSourceRow());
+        self::assertSame($sourceString, $swedbankCsvPaymentRowModel->getSourceString());
         self::assertSame($accountNumber, $swedbankCsvPaymentRowModel->getAccountNumber());
         self::assertSame($recordType, $swedbankCsvPaymentRowModel->getRecordType());
         self::assertSame($transactionDate, $swedbankCsvPaymentRowModel->getTransactionDate());
@@ -91,7 +93,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CLIENT_REFERENCE => $clientReference = '',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER => $documentNumber = '$documentNumber',
         ];
-        $swedbankCsvPaymentRowModel = new class ('line-1', $validRow) extends AbstractSwedbankCsvPaymentRowModel {
+        $swedbankCsvPaymentRowModel = new class ('line-1', $validRow, '') extends AbstractSwedbankCsvPaymentRowModel {
         };
         $constraintViolationList = $swedbankCsvPaymentValidatorService->validatePaymentRow($swedbankCsvPaymentRowModel);
         $violations = ViolationUtils::stringify($constraintViolationList);
@@ -113,7 +115,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => ['line-1.accountNumber [0 column] This value should not be blank. Value: "".'],
@@ -123,7 +125,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -136,7 +138,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_DATE] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -148,7 +150,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_DATE] = '2011/12/13';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -160,7 +162,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_PARTY] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -172,7 +174,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DETAILS] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -184,7 +186,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_AMOUNT] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -197,7 +199,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_AMOUNT] = '1';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -209,7 +211,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CURRENCY] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -222,7 +224,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DEBIT_CREDIT_INDICATOR] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -235,7 +237,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_REFERENCE] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -247,7 +249,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_REFERENCE] = '1';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -259,7 +261,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_TYPE] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -272,7 +274,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CLIENT_REFERENCE] = 'test';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [
@@ -284,7 +286,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER] = '';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [],
@@ -294,7 +296,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER] = 'test';
 
-                    return new class ('line-1', $row) extends AbstractSwedbankCsvPaymentRowModel {
+                    return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
                 'expectedViolations' => [],

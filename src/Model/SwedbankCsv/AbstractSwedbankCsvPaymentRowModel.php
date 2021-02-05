@@ -103,6 +103,10 @@ class AbstractSwedbankCsvPaymentRowModel
 
     /** @var string */
     protected $lineId;
+    /** @var string[] */
+    protected $sourceRow;
+    /** @var string */
+    private $sourceString;
     /** @var string */
     protected $accountNumber;
     /** @var string */
@@ -129,28 +133,43 @@ class AbstractSwedbankCsvPaymentRowModel
     protected $documentNumber;
 
     /**
-     * @param string[] $row
+     * @param string[] $sourceRow
      */
-    public function __construct(string $lineId, array $row)
+    public function __construct(string $lineId, array $sourceRow, string $sourceString)
     {
         $this->lineId = $lineId;
-        $this->accountNumber = $row[self::INPUT_KEY_ACCOUNT_NUMBER] ?? '';
-        $this->recordType = $row[self::INPUT_KEY_RECORD_TYPE] ?? '';
-        $this->transactionDate = $row[self::INPUT_KEY_TRANSACTION_DATE] ?? '';
-        $this->party = $row[self::INPUT_KEY_PARTY] ?? '';
-        $this->details = $row[self::INPUT_KEY_DETAILS] ?? '';
-        $this->amount = $row[self::INPUT_KEY_AMOUNT] ?? '';
-        $this->currency = $row[self::INPUT_KEY_CURRENCY] ?? '';
-        $this->debitCreditIndicator = $row[self::INPUT_KEY_DEBIT_CREDIT_INDICATOR] ?? '';
-        $this->transactionReference = $row[self::INPUT_KEY_TRANSACTION_REFERENCE] ?? '';
-        $this->transactionType = $row[self::INPUT_KEY_TRANSACTION_TYPE] ?? '';
-        $this->clientReference = $row[self::INPUT_KEY_CLIENT_REFERENCE] ?? '';
-        $this->documentNumber = $row[self::INPUT_KEY_DOCUMENT_NUMBER] ?? '';
+        $this->sourceRow = $sourceRow;
+        $this->sourceString = $sourceString;
+        $this->accountNumber = $sourceRow[self::INPUT_KEY_ACCOUNT_NUMBER] ?? '';
+        $this->recordType = $sourceRow[self::INPUT_KEY_RECORD_TYPE] ?? '';
+        $this->transactionDate = $sourceRow[self::INPUT_KEY_TRANSACTION_DATE] ?? '';
+        $this->party = $sourceRow[self::INPUT_KEY_PARTY] ?? '';
+        $this->details = $sourceRow[self::INPUT_KEY_DETAILS] ?? '';
+        $this->amount = $sourceRow[self::INPUT_KEY_AMOUNT] ?? '';
+        $this->currency = $sourceRow[self::INPUT_KEY_CURRENCY] ?? '';
+        $this->debitCreditIndicator = $sourceRow[self::INPUT_KEY_DEBIT_CREDIT_INDICATOR] ?? '';
+        $this->transactionReference = $sourceRow[self::INPUT_KEY_TRANSACTION_REFERENCE] ?? '';
+        $this->transactionType = $sourceRow[self::INPUT_KEY_TRANSACTION_TYPE] ?? '';
+        $this->clientReference = $sourceRow[self::INPUT_KEY_CLIENT_REFERENCE] ?? '';
+        $this->documentNumber = $sourceRow[self::INPUT_KEY_DOCUMENT_NUMBER] ?? '';
     }
 
     public function getLineId(): string
     {
         return $this->lineId;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getSourceRow(): array
+    {
+        return $this->sourceRow;
+    }
+
+    public function getSourceString(): string
+    {
+        return $this->sourceString;
     }
 
     public function getAccountNumber(): string

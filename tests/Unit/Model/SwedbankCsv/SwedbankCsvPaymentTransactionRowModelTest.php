@@ -43,7 +43,7 @@ class SwedbankCsvPaymentTransactionRowModelTest extends WebTestCase
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CLIENT_REFERENCE => $clientReference = '',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER => $documentNumber = '$documentNumber',
         ];
-        $swedbankCsvPaymentTransactionRowModel = new SwedbankCsvPaymentTransactionRowModel('line-1', $validRow);
+        $swedbankCsvPaymentTransactionRowModel = new SwedbankCsvPaymentTransactionRowModel('line-1', $validRow, '');
         $constraintViolationList = $swedbankCsvPaymentValidatorService->validatePaymentRow($swedbankCsvPaymentTransactionRowModel);
         $violations = ViolationUtils::stringify($constraintViolationList);
         self::assertSame([], $violations, 'Row must be valid before changing data.');
@@ -64,7 +64,7 @@ class SwedbankCsvPaymentTransactionRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE] = '';
 
-                    return new SwedbankCsvPaymentTransactionRowModel('line-1', $row);
+                    return new SwedbankCsvPaymentTransactionRowModel('line-1', $row, '');
                 },
                 'expectedViolations' => [
                     'line-1.recordType [1 column] The value you selected is not a valid choice. Valid choices: "20". Value: "".',
@@ -77,7 +77,7 @@ class SwedbankCsvPaymentTransactionRowModelTest extends WebTestCase
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
                     $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_TYPE] = '';
 
-                    return new SwedbankCsvPaymentTransactionRowModel('line-1', $row);
+                    return new SwedbankCsvPaymentTransactionRowModel('line-1', $row, '');
                 },
                 'expectedViolations' => [
                     'line-1.transactionType [9 column] The value you selected is not a valid choice. Valid choices: "MK". Value: "".',

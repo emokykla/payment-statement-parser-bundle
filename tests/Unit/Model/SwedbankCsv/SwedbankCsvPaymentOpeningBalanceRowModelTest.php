@@ -39,7 +39,7 @@ class SwedbankCsvPaymentOpeningBalanceRowModelTest extends WebTestCase
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CLIENT_REFERENCE => $clientReference = '',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER => $documentNumber = '$documentNumber',
         ];
-        $swedbankCsvPaymentOpeningBalanceRowModel = new SwedbankCsvPaymentOpeningBalanceRowModel('line-1', $validRow);
+        $swedbankCsvPaymentOpeningBalanceRowModel = new SwedbankCsvPaymentOpeningBalanceRowModel('line-1', $validRow, '');
         $constraintViolationList = $swedbankCsvPaymentValidatorService->validatePaymentRow($swedbankCsvPaymentOpeningBalanceRowModel);
         $violations = ViolationUtils::stringify($constraintViolationList);
         self::assertSame(

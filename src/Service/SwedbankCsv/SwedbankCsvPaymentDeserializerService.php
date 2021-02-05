@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace EMO\PaymentStatementParserBundle\Service\SwedbankCsv;
 
-use EMO\PaymentStatementParserBundle\Service\Csv\CsvSerializerUtils;
+use EMO\PaymentStatementParserBundle\Model\Csv\CsvRowModel;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
+
+use function rtrim;
 
 class SwedbankCsvPaymentDeserializerService
 {
@@ -18,11 +20,11 @@ class SwedbankCsvPaymentDeserializerService
     }
 
     /**
-     * @return string[][]
+     * @return CsvRowModel[]
      */
     public function explodePaymentsCsv(string $content): array
     {
-        $contentArray = $this->csvEncoder->decode(
+        $rows = $this->csvEncoder->decode(
             $content,
             CsvEncoder::FORMAT,
             [
@@ -30,11 +32,32 @@ class SwedbankCsvPaymentDeserializerService
                 CsvEncoder::ENCLOSURE_KEY => '"',
                 CsvEncoder::KEY_SEPARATOR_KEY => '.',
                 CsvEncoder::NO_HEADERS_KEY => true,
+                CsvEncoder::AS_COLLECTION_KEY => true,
             ]
         );
 
-        $contentArray = CsvSerializerUtils::ensureArrayOfArrays($contentArray);
+        /** @var CsvRowModel[] $csvRowModels */
+        $csvRowModels = [];
+        foreach ($rows as $key => $row) {
+            /* since it is difficult to get original string from csv because it may contain new lines in data, let's use encode to create new csv string */
+            /** @var string $sourceString */
+            $sourceString = $this->csvEncoder->encode(
+                $row,
+                CsvEncoder::FORMAT,
+                [
+                    CsvEncoder::DELIMITER_KEY => ',',
+                    CsvEncoder::ENCLOSURE_KEY => '"',
+                    CsvEncoder::KEY_SEPARATOR_KEY => '.',
+                    CsvEncoder::NO_HEADERS_KEY => true,
+                    CsvEncoder::AS_COLLECTION_KEY => true,
+                ]
+            );
+            /* `csvEncoder->encode` add new line at the end. Remove it. */
+            $sourceString = rtrim($sourceString);
 
-        return $contentArray;
+            $csvRowModels[] = new CsvRowModel($key + 1, $row, $sourceString);
+        }
+
+        return $csvRowModels;
     }
 }

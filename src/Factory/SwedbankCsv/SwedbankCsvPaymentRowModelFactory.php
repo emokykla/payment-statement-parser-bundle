@@ -19,20 +19,20 @@ class SwedbankCsvPaymentRowModelFactory
     /**
      * @param string[] $row
      */
-    public function get(string $lineId, array $row): AbstractSwedbankCsvPaymentRowModel
+    public function get(string $lineId, array $row, string $sourceString): AbstractSwedbankCsvPaymentRowModel
     {
         $recordType = $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE] ?? null;
         switch ($recordType) {
             case AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_OPENING_BALANCE:
-                return new SwedbankCsvPaymentOpeningBalanceRowModel($lineId, $row);
+                return new SwedbankCsvPaymentOpeningBalanceRowModel($lineId, $row, $sourceString);
             case AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_TRANSACTION:
-                return new SwedbankCsvPaymentTransactionRowModel($lineId, $row);
+                return new SwedbankCsvPaymentTransactionRowModel($lineId, $row, $sourceString);
             case AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_TURNOVER:
-                return new SwedbankCsvPaymentTurnoverRowModel($lineId, $row);
+                return new SwedbankCsvPaymentTurnoverRowModel($lineId, $row, $sourceString);
             case AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_CLOSING_BALANCE:
-                return new SwedbankCsvPaymentClosingBalanceRowModel($lineId, $row);
+                return new SwedbankCsvPaymentClosingBalanceRowModel($lineId, $row, $sourceString);
             case AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_ACCRUED_INTEREST:
-                return new SwedbankCsvPaymentAccruedInterestRowModel($lineId, $row);
+                return new SwedbankCsvPaymentAccruedInterestRowModel($lineId, $row, $sourceString);
             default:
                 if ($recordType) {
                     throw new RuntimeException(

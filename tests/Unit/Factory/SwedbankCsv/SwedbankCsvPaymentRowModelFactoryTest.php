@@ -29,7 +29,7 @@ class SwedbankCsvPaymentRowModelFactoryTest extends TestCase
     public function testGetCorrectClass(string $assertMessage, array $row, string $expectedInstanceClass): void
     {
         $swedbankCsvPaymentRowModelFactory = new SwedbankCsvPaymentRowModelFactory();
-        $swedbankCsvPaymentRowModel = $swedbankCsvPaymentRowModelFactory->get('line-1', $row);
+        $swedbankCsvPaymentRowModel = $swedbankCsvPaymentRowModelFactory->get('line-1', $row, '');
         /** @noinspection UnnecessaryAssertionInspection */
         self::assertInstanceOf($expectedInstanceClass, $swedbankCsvPaymentRowModel, $assertMessage);
     }
@@ -77,7 +77,7 @@ class SwedbankCsvPaymentRowModelFactoryTest extends TestCase
     {
         $swedbankCsvPaymentRowModelFactory = new SwedbankCsvPaymentRowModelFactory();
         $this->expectExceptionMessage($expectedExceptionMessage);
-        $swedbankCsvPaymentRowModelFactory->get('line-1', $row);
+        $swedbankCsvPaymentRowModelFactory->get('line-1', $row, '');
     }
 
     /** @return mixed[][] */

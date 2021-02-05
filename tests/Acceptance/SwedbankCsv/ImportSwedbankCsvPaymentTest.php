@@ -24,19 +24,19 @@ class ImportSwedbankCsvPaymentTest extends WebTestCase
     public function test(): void
     {
         $swedbankCsvPaymentDeserializerService = $this->getContainer()->get(SwedbankCsvPaymentDeserializerService::class);
-        $swedbankLtPaymentValidatorService = $this->getContainer()->get(SwedbankCsvPaymentValidatorService::class);
-        $swedbankLtPaymentRowModelFactory = $this->getContainer()->get(SwedbankCsvPaymentRowModelFactory::class);
+        $swedbankCsvPaymentValidatorService = $this->getContainer()->get(SwedbankCsvPaymentValidatorService::class);
+        $swedbankCsvPaymentRowModelFactory = $this->getContainer()->get(SwedbankCsvPaymentRowModelFactory::class);
 
         $paymentContent = file_get_contents(__DIR__.'/../../../docs/SwedbankCsv/paymentImportExampleSwedbank.csv');
         $paymentContent = mb_convert_encoding($paymentContent, 'utf-8', 'iso-8859-13');
-        $paymentRows = $swedbankCsvPaymentDeserializerService->explodePaymentsCsv($paymentContent);
+        $csvRowModels = $swedbankCsvPaymentDeserializerService->explodePaymentsCsv($paymentContent);
 
         $swedbankCsvPaymentRowModels = [];
         $violations = [];
         /* create row model */
-        foreach ($paymentRows as $rowKey => $paymentRow) {
-            $lineId = sprintf('line-%d', $rowKey + 1);
-            $swedbankCsvPaymentRowModels[] = $swedbankLtPaymentRowModelFactory->get($lineId, $paymentRow);
+        foreach ($csvRowModels as $csvRowModel) {
+            $lineId = sprintf('line-%d', $csvRowModel->getLineNo());
+            $swedbankCsvPaymentRowModels[] = $swedbankCsvPaymentRowModelFactory->get($lineId, $csvRowModel->getRow(), $csvRowModel->getSource());
         }
         /* filter what you need, most likely - transactions */
         /** @var SwedbankCsvPaymentTransactionRowModel[] $transactionModels */
@@ -48,7 +48,7 @@ class ImportSwedbankCsvPaymentTest extends WebTestCase
         );
         /* validate */
         foreach ($transactionModels as $transactionModel) {
-            $constraintViolationList = $swedbankLtPaymentValidatorService->validatePaymentRow($transactionModel);
+            $constraintViolationList = $swedbankCsvPaymentValidatorService->validatePaymentRow($transactionModel);
             if ($constraintViolationList->count() > 0) {
                 /** @var ConstraintViolationInterface $constraintViolation */
                 foreach ($constraintViolationList as $constraintViolation) {
