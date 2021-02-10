@@ -28,7 +28,14 @@ class SwedbankCsvPaymentDeserializerService
         $this->csvEncoder = new CsvEncoder();
     }
 
+    public function convertEncodingToUtf8(string $content): string
+    {
+        return mb_convert_encoding($content, 'utf-8', 'iso-8859-13');
+    }
+
     /**
+     * @param string $content make sure string comes in UTF-8 encoding {@see SwedbankCsvPaymentDeserializerService::convertEncodingToUtf8())
+     *
      * @return CsvRowModel[]
      */
     public function explodePaymentsCsv(string $content): array
