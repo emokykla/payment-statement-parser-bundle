@@ -1,0 +1,7 @@
+version: '3'
+services:
+    php:
+        volumes:
+            - .:/srv/app
+            - /srv/app/var
+            - ./vendor:/srv/app/vendor:delegated
