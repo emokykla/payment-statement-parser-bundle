@@ -101,12 +101,28 @@ class AbstractSwedbankCsvPaymentRowModel
 
     public const TRANSACTION_TYPE_MK = 'MK';
 
+    /**
+     * PROPERTY_* constants reflect field names.
+     */
+    protected const PROPERTY_ACCOUNT_NUMBER = 'accountNumber';
+    protected const PROPERTY_RECORD_TYPE = 'recordType';
+    protected const PROPERTY_TRANSACTION_DATE = 'transactionDate';
+    protected const PROPERTY_PARTY = 'party';
+    protected const PROPERTY_DETAILS = 'details';
+    protected const PROPERTY_AMOUNT = 'amount';
+    protected const PROPERTY_CURRENCY = 'currency';
+    protected const PROPERTY_DEBIT_CREDIT_INDICATOR = 'debitCreditIndicator';
+    protected const PROPERTY_TRANSACTION_REFERENCE = 'transactionReference';
+    protected const PROPERTY_TRANSACTION_TYPE = 'transactionType';
+    protected const PROPERTY_CLIENT_REFERENCE = 'clientReference';
+    protected const PROPERTY_DOCUMENT_NUMBER = 'documentNumber';
+
     /** @var string */
     protected $lineId;
     /** @var string[] */
     protected $sourceRow;
     /** @var string */
-    private $sourceString;
+    protected $sourceString;
     /** @var string */
     protected $accountNumber;
     /** @var string */
@@ -238,7 +254,7 @@ class AbstractSwedbankCsvPaymentRowModel
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER
          */
         $metadata->addPropertyConstraints(
-            'accountNumber',
+            self::PROPERTY_ACCOUNT_NUMBER,
             [new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_ACCOUNT_NUMBER)])]
         );
         /**
@@ -252,7 +268,7 @@ class AbstractSwedbankCsvPaymentRowModel
             self::RECORD_TYPE_ACCRUED_INTEREST,
         ];
         $metadata->addPropertyConstraints(
-            'recordType',
+            self::PROPERTY_RECORD_TYPE,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_RECORD_TYPE)]),
                 new Choice(
@@ -271,7 +287,7 @@ class AbstractSwedbankCsvPaymentRowModel
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_DATE
          */
         $metadata->addPropertyConstraints(
-            'transactionDate',
+            self::PROPERTY_TRANSACTION_DATE,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_TRANSACTION_DATE)]),
                 new Regex(
@@ -286,21 +302,21 @@ class AbstractSwedbankCsvPaymentRowModel
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_PARTY
          */
         $metadata->addPropertyConstraints(
-            'party',
+            self::PROPERTY_PARTY,
             [new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_PARTY)])]
         );
         /**
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DETAILS
          */
         $metadata->addPropertyConstraints(
-            'details',
+            self::PROPERTY_DETAILS,
             [new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_DETAILS)])]
         );
         /**
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_AMOUNT
          */
         $metadata->addPropertyConstraints(
-            'amount',
+            self::PROPERTY_AMOUNT,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_AMOUNT)]),
                 new GreaterThan(
@@ -322,7 +338,7 @@ class AbstractSwedbankCsvPaymentRowModel
          */
         $availableCurrencies = [self::CURRENCY_EUR];
         $metadata->addPropertyConstraints(
-            'currency',
+            self::PROPERTY_CURRENCY,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_CURRENCY)]),
                 new Choice(
@@ -345,7 +361,7 @@ class AbstractSwedbankCsvPaymentRowModel
             self::INDICATOR_DEBIT,
         ];
         $metadata->addPropertyConstraints(
-            'debitCreditIndicator',
+            self::PROPERTY_DEBIT_CREDIT_INDICATOR,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_DEBIT_CREDIT_INDICATOR)]),
                 new Choice(
@@ -364,7 +380,7 @@ class AbstractSwedbankCsvPaymentRowModel
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_REFERENCE
          */
         $metadata->addPropertyConstraints(
-            'transactionReference',
+            self::PROPERTY_TRANSACTION_REFERENCE,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_TRANSACTION_REFERENCE)]),
                 new Regex(
@@ -382,7 +398,7 @@ class AbstractSwedbankCsvPaymentRowModel
             self::TRANSACTION_TYPE_MK,
         ];
         $metadata->addPropertyConstraints(
-            'transactionType',
+            self::PROPERTY_TRANSACTION_TYPE,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_TRANSACTION_TYPE)]),
                 new Choice(
@@ -401,12 +417,12 @@ class AbstractSwedbankCsvPaymentRowModel
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_CLIENT_REFERENCE
          */
         $metadata->addPropertyConstraints(
-            'clientReference',
+            self::PROPERTY_CLIENT_REFERENCE,
             [new Blank(['message' => sprintf('[%d column] This value should be blank, documentation says "Not used".', self::INPUT_KEY_CLIENT_REFERENCE)])]
         );
         /**
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_DOCUMENT_NUMBER
          */
-        $metadata->addPropertyConstraints('documentNumber', []);
+        $metadata->addPropertyConstraints(self::PROPERTY_DOCUMENT_NUMBER, []);
     }
 }

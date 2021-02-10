@@ -21,7 +21,7 @@ class SwedbankCsvPaymentTransactionRowModel extends AbstractSwedbankCsvPaymentRo
             self::RECORD_TYPE_TRANSACTION,
         ];
         $metadata->addPropertyConstraints(
-            'recordType',
+            self::PROPERTY_RECORD_TYPE,
             [
                 new Choice(
                     [
@@ -42,7 +42,7 @@ class SwedbankCsvPaymentTransactionRowModel extends AbstractSwedbankCsvPaymentRo
             self::TRANSACTION_TYPE_MK,
         ];
         $metadata->addPropertyConstraints(
-            'transactionType',
+            self::PROPERTY_TRANSACTION_TYPE,
             [
                 new Choice(
                     [
