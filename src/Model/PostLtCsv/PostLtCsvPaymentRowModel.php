@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace EMO\PaymentStatementParserBundle\Model\PostLtCsv;
 
+use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -13,6 +14,7 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 use function implode;
 use function sprintf;
+use function str_replace;
 
 /**
  * Example row:
@@ -221,6 +223,25 @@ class PostLtCsvPaymentRowModel
         return $this->bankTransferDate;
     }
 
+    public function getAmountInCents(): int
+    {
+        return (int) ((float) $this->getAmount() * 100);
+    }
+
+    public function getPaymentDateObject(): DateTimeImmutable
+    {
+        $dateString = $this->fixDateStringFormat($this->getPaymentDate());
+
+        return new DateTimeImmutable($dateString);
+    }
+
+    public function getBankTransferDateObject(): DateTimeImmutable
+    {
+        $dateString = $this->fixDateStringFormat($this->getBankTransferDate());
+
+        return new DateTimeImmutable($dateString);
+    }
+
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
         /* column count */
@@ -368,5 +389,13 @@ class PostLtCsvPaymentRowModel
                 ),
             ]
         );
+    }
+
+    /**
+     * Converts '2017.08.31' to '2017-08-31' which will be accepted by DateTime constructor.
+     */
+    private function fixDateStringFormat(string $dateString): string
+    {
+        return str_replace('.', '-', $dateString);
     }
 }
