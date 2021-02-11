@@ -6,7 +6,7 @@ namespace EMO\PaymentStatementParserBundle\Model\SwedbankCsv;
 
 use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
@@ -108,6 +108,7 @@ class AbstractSwedbankCsvPaymentRowModel
     /**
      * PROPERTY_* constants reflect field names.
      */
+    protected const PROPERTY_SOURCE_ROW = 'sourceRow';
     protected const PROPERTY_ACCOUNT_NUMBER = 'accountNumber';
     protected const PROPERTY_RECORD_TYPE = 'recordType';
     protected const PROPERTY_TRANSACTION_DATE = 'transactionDate';
@@ -254,6 +255,11 @@ class AbstractSwedbankCsvPaymentRowModel
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
+        /* column count */
+        $metadata->addPropertyConstraints(
+            self::PROPERTY_SOURCE_ROW,
+            [new Count(['min' => self::COLUMN_COUNT, 'max' => self::COLUMN_COUNT])]
+        );
         /**
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER
          */
@@ -297,7 +303,7 @@ class AbstractSwedbankCsvPaymentRowModel
                 new Regex(
                     [
                         'message' => sprintf('[%d column] This value is not valid. Valid formats: "yyyy-mm-dd".', self::INPUT_KEY_TRANSACTION_DATE),
-                        'pattern' => '/\d{4}-\d{2}-\d{2}/',
+                        'pattern' => '/^\d{4}-\d{2}-\d{2}$/',
                     ]
                 ),
             ]
@@ -323,16 +329,10 @@ class AbstractSwedbankCsvPaymentRowModel
             self::PROPERTY_AMOUNT,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_AMOUNT)]),
-                new GreaterThan(
-                    [
-                        'message' => sprintf('[%d column] This value should be greater than 0.', self::INPUT_KEY_AMOUNT),
-                        'value' => 0,
-                    ]
-                ),
                 new Regex(
                     [
                         'message' => sprintf('[%d column] Value must be formatted as float "x.yy".', self::INPUT_KEY_AMOUNT),
-                        'pattern' => '/\d+\.\d{2}/',
+                        'pattern' => '/^\d+\.\d{2}$/',
                     ]
                 ),
             ]
@@ -390,7 +390,7 @@ class AbstractSwedbankCsvPaymentRowModel
                 new Regex(
                     [
                         'message' => sprintf('[%d column] Value must be formatted as 16 digits.', self::INPUT_KEY_TRANSACTION_REFERENCE),
-                        'pattern' => '/\d{16}/',
+                        'pattern' => '/^\d{16}$/',
                     ]
                 ),
             ]
