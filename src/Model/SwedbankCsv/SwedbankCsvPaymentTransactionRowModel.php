@@ -12,6 +12,16 @@ use function sprintf;
 
 class SwedbankCsvPaymentTransactionRowModel extends AbstractSwedbankCsvPaymentRowModel
 {
+    public function getAmountInCents(): int
+    {
+        return (int) ((float) $this->getAmount() * 100);
+    }
+
+    public function getDetailsModel(): SwedbankCsvPaymentTransactionDetailsModel
+    {
+        return new SwedbankCsvPaymentTransactionDetailsModel($this->getDetails());
+    }
+
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
         /**

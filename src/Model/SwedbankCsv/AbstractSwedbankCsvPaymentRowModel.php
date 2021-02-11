@@ -49,6 +49,10 @@ class AbstractSwedbankCsvPaymentRowModel
      * E.g. Vardenis Pavardenis | AGBLLT2XXXX | LT664010051003333333
      */
     public const INPUT_KEY_PARTY = 3;
+    /**
+     * In transaction record type field contains multiple values concatenated with "/" symbol.
+     * E.g. XXX 333333/ / / / / / / /
+     */
     public const INPUT_KEY_DETAILS = 4;
     /**
      * Decimals separated by "." (dot)

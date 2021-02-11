@@ -87,4 +87,45 @@ class SwedbankCsvPaymentTransactionRowModelTest extends WebTestCase
             ],
         ];
     }
+
+    /**
+     * @covers ::getAmountInCents
+     *
+     * @dataProvider getAmountInCentsProvider
+     */
+    public function testGetAmountInCents(string $amount, int $expectedAmountInCents): void
+    {
+        /* setup */
+        $row = [
+            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE => $recordType = AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_TRANSACTION,
+            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_AMOUNT => $amount,
+        ];
+        /* do */
+        $swedbankCsvPaymentTransactionRowModel = new SwedbankCsvPaymentTransactionRowModel('line-1', $row, '');
+        /* assert */
+        self::assertSame($expectedAmountInCents, $swedbankCsvPaymentTransactionRowModel->getAmountInCents());
+    }
+
+    /** @return mixed[][] */
+    public function getAmountInCentsProvider(): array
+    {
+        return [
+            '0.' => [
+                'amount' => '0.00',
+                'expectedAmountInCents' => 0,
+            ],
+            '1.' => [
+                'amount' => '0.01',
+                'expectedAmountInCents' => 1,
+            ],
+            '2.' => [
+                'amount' => '1.00',
+                'expectedAmountInCents' => 100,
+            ],
+            '3.' => [
+                'amount' => '12345.67',
+                'expectedAmountInCents' => 1234567,
+            ],
+        ];
+    }
 }
