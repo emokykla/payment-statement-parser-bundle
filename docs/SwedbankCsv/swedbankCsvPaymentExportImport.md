@@ -1,5 +1,9 @@
 # Payment import from csv file from swedbank.lt
 
+## How to use
+
+Checkout `\EMO\PaymentStatementParserBundle\Tests\Acceptance\SwedbankCsv\ImportSwedbankCsvPaymentTest` for example how to use it.
+
 ## Exported file
 
 - `paymentImportExampleSwedbank.csv`
