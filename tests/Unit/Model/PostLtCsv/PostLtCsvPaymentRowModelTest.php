@@ -182,7 +182,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
                 'expectedViolations' => [
-                    'line-1.paymentDate [1 column] This value is not valid. Valid formats: "yyyy.mm.dd". Value: "-2011-12-13 00:00".',
+                    'line-1.paymentDate [1 column] This value is not valid. Valid formats: "yyyy.mm.dd". Value: "-2011.12.13 00:00".',
                 ],
             ],
             '7.' => [

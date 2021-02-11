@@ -14,6 +14,7 @@ use RuntimeException;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 
 use function array_filter;
+use function array_values;
 use function count;
 use function file_get_contents;
 use function implode;
@@ -71,6 +72,11 @@ class ImportSwedbankCsvPaymentTest extends WebTestCase
                 return $csvPaymentTransactionRowModel->getDebitCreditIndicator() === SwedbankCsvPaymentTransactionRowModel::INDICATOR_CREDIT;
             }
         );
-        self::assertGreaterThan(0, count($transactionModels));
+        self::assertCount(9, $transactionModels, 'There are 9 transaction lines in file.');
+        self::assertSame(
+            'Vardenė1 Pavardenis1 | AGBLLT2XXXX | LT154010042403333333',
+            array_values($transactionModels)[0]->getParty(),
+            'Final model data must be encoded in UTF-8.'
+        );
     }
 }
