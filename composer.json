@@ -24,8 +24,8 @@
     ],
     "require": {
         "php": "^7.2",
-        "symfony/serializer": "4.4.2",
-        "symfony/validator": "4.4.2"
+        "symfony/serializer": "4.4.*",
+        "symfony/validator": "4.4.*"
     },
     "require-dev": {
         "emokykla/coding-standards": "^1.0",
@@ -36,7 +36,7 @@
         "phpstan/phpstan-symfony": "^0.12.16",
         "phpunit/phpunit": "^8.0",
         "roave/security-advisories": "dev-master",
-        "symfony/framework-bundle": "4.4.2",
+        "symfony/framework-bundle": "4.4.*",
         "symfony/yaml": "^5.2"
     },
     "config": {
