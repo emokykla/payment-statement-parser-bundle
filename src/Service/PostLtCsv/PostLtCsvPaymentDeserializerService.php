@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace EMO\PaymentStatementParserBundle\Service\PostLtCsv;
 
 use EMO\PaymentStatementParserBundle\Model\Csv\CsvRowModel;
+use EMO\PaymentStatementParserBundle\Service\Csv\CsvDeserializerService;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
-
-use function rtrim;
 
 class PostLtCsvPaymentDeserializerService
 {
@@ -18,14 +17,13 @@ class PostLtCsvPaymentDeserializerService
         CsvEncoder::NO_HEADERS_KEY => true,
         CsvEncoder::AS_COLLECTION_KEY => true,
     ];
-    private const ENCODER_FORMAT = CsvEncoder::FORMAT;
 
-    /** @var CsvEncoder */
-    private $csvEncoder;
+    /** @var CsvDeserializerService */
+    private $csvDeserializerService;
 
-    public function __construct()
+    public function __construct(CsvDeserializerService $csvDeserializerService)
     {
-        $this->csvEncoder = new CsvEncoder();
+        $this->csvDeserializerService = $csvDeserializerService;
     }
 
     public function convertEncodingToUtf8(string $content): string
@@ -40,20 +38,6 @@ class PostLtCsvPaymentDeserializerService
      */
     public function explodePaymentsCsv(string $content): array
     {
-        $rows = $this->csvEncoder->decode($content, self::ENCODER_FORMAT, self::ENCODER_SETTINGS);
-
-        /** @var CsvRowModel[] $csvRowModels */
-        $csvRowModels = [];
-        foreach ($rows as $key => $row) {
-            /* since it is difficult to get original string from csv because it may contain new lines in data, let's use encode to create new csv string */
-            /** @var string $sourceString */
-            $sourceString = $this->csvEncoder->encode($row, self::ENCODER_FORMAT, self::ENCODER_SETTINGS);
-            /* `csvEncoder->encode` add new line at the end. Remove it. */
-            $sourceString = rtrim($sourceString);
-
-            $csvRowModels[] = new CsvRowModel($key + 1, $row, $sourceString);
-        }
-
-        return $csvRowModels;
+        return $this->csvDeserializerService->explodePaymentsCsv($content, self::ENCODER_SETTINGS);
     }
 }
