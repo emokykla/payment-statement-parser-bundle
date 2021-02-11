@@ -28,7 +28,7 @@ class ImportSwedbankCsvPaymentTest extends WebTestCase
         $swedbankCsvPaymentRowModelFactory = $this->getContainer()->get(SwedbankCsvPaymentRowModelFactory::class);
 
         $paymentContent = file_get_contents(__DIR__.'/../../../docs/SwedbankCsv/paymentImportExampleSwedbank.csv');
-        $paymentContent = mb_convert_encoding($paymentContent, 'utf-8', 'iso-8859-13');
+        $paymentContent = $swedbankCsvPaymentDeserializerService->convertEncodingToUtf8($paymentContent);
         $csvRowModels = $swedbankCsvPaymentDeserializerService->explodePaymentsCsv($paymentContent);
 
         $swedbankCsvPaymentRowModels = [];
