@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace EMO\PaymentStatementParserBundle\Tests\Acceptance\PostLtCsv;
 
+use DateTimeImmutable;
 use EMO\PaymentStatementParserBundle\Factory\PostLtCsv\PostLtCsvPaymentRowModelFactory;
+use EMO\PaymentStatementParserBundle\Model\PostLtCsv\PostLtCsvPaymentRowFormattedModel;
 use EMO\PaymentStatementParserBundle\Service\PostLtCsv\PostLtCsvPaymentDeserializerService;
 use EMO\PaymentStatementParserBundle\Service\PostLtCsv\PostLtCsvPaymentValidatorService;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
@@ -54,6 +56,18 @@ class ImportPostLtCsvPaymentTest extends WebTestCase
             throw new RuntimeException(sprintf("Must not have validation violations: \n%s", implode("\n", $violations)));
         }
         self::assertCount(2, $postLtCsvPaymentRowModels, '2 rows in the file.');
-        self::assertSame('Vardenė1 Pavardenis1', $postLtCsvPaymentRowModels[0]->getPayedByName(), 'Final model data must be encoded in UTF-8.');
+        /**
+         * Get raw csv values from model.
+         */
+        self::assertSame('Vardenė1 Pavardenis1', $postLtCsvPaymentRowModels[0]->getRawPayedByName(), 'Final model data must be encoded in UTF-8.');
+        /**
+         * Use helper methods for some of the raw values.
+         */
+        $postLtCsvPaymentRowFormattedModel = new PostLtCsvPaymentRowFormattedModel($postLtCsvPaymentRowModels[0]);
+        self::assertEquals(
+            new DateTimeImmutable('2017-09-07'),
+            $postLtCsvPaymentRowFormattedModel->getPaymentDateObject(),
+            'String must be correctly converted to date time object.'
+        );
     }
 }

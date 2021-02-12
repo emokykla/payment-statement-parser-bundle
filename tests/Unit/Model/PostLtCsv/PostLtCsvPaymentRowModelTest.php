@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace EMO\PaymentStatementParserBundle\Tests\Unit\Model\PostLtCsv;
 
-use DateTimeImmutable;
 use EMO\PaymentStatementParserBundle\Model\PostLtCsv\PostLtCsvPaymentRowModel;
 use EMO\PaymentStatementParserBundle\Service\PostLtCsv\PostLtCsvPaymentValidatorService;
 use EMO\PaymentStatementParserBundle\Tests\Service\ViolationUtils;
@@ -22,8 +21,8 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
      * @covers ::getTransactionDate
      * @covers ::getParty
      * @covers ::getDetails
-     * @covers ::getAmount
-     * @covers ::getCurrency
+     * @covers ::getRawAmount
+     * @covers ::getRawCurrency
      * @covers ::getDebitCreditIndicator
      * @covers ::getTransactionReference
      * @covers ::getTransactionType
@@ -33,34 +32,34 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
     public function testGetters(): void
     {
         $row = [
-            PostLtCsvPaymentRowModel::INPUT_KEY_POST_CODE => $postCode = '$postCode',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DATE => $paymentDate = '$paymentDate',
-            PostLtCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER => $bankAccountNumber = '$bankAccountNumber',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DETAILS => $paymentDetails = '$paymentDetails',
-            PostLtCsvPaymentRowModel::INPUT_KEY_ADDITIONAL_INFORMATION => $additionalInformation = '$additionalInformation',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYED_BY_NAME => $payedByName = '$payedByName',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYED_BY_ADDRESS => $payedByAddress = '$payedByAddress',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_CODE => $paymentCode = '$paymentCode',
-            PostLtCsvPaymentRowModel::INPUT_KEY_AMOUNT => $amount = '$amount',
-            PostLtCsvPaymentRowModel::INPUT_KEY_CURRENCY => $currency = '$currency',
-            PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_CODE => $bankTransferCode = '$bankTransferCode',
-            PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_DATE => $bankTransferDate = '$bankTransferDate',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_POST_CODE => $postCode = '$postCode',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DATE => $paymentDate = '$paymentDate',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_ACCOUNT_NUMBER => $bankAccountNumber = '$bankAccountNumber',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DETAILS => $paymentDetails = '$paymentDetails',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_ADDITIONAL_INFORMATION => $additionalInformation = '$additionalInformation',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYED_BY_NAME => $payedByName = '$payedByName',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYED_BY_ADDRESS => $payedByAddress = '$payedByAddress',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_CODE => $paymentCode = '$paymentCode',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_AMOUNT => $amount = '$amount',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_CURRENCY => $currency = '$currency',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_CODE => $bankTransferCode = '$bankTransferCode',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_DATE => $bankTransferDate = '$bankTransferDate',
         ];
         $postLtCsvPaymentRowModel = new PostLtCsvPaymentRowModel($lineId = 'line-1', $row, $sourceString = 'source string');
         self::assertSame($lineId, $postLtCsvPaymentRowModel->getLineId());
         self::assertSame($row, $postLtCsvPaymentRowModel->getSourceRow());
-        self::assertSame($postCode, $postLtCsvPaymentRowModel->getPostCode());
-        self::assertSame($paymentDate, $postLtCsvPaymentRowModel->getPaymentDate());
-        self::assertSame($bankAccountNumber, $postLtCsvPaymentRowModel->getBankAccountNumber());
-        self::assertSame($paymentDetails, $postLtCsvPaymentRowModel->getPaymentDetails());
-        self::assertSame($additionalInformation, $postLtCsvPaymentRowModel->getAdditionalInformation());
-        self::assertSame($payedByName, $postLtCsvPaymentRowModel->getPayedByName());
-        self::assertSame($payedByAddress, $postLtCsvPaymentRowModel->getPayedByAddress());
-        self::assertSame($paymentCode, $postLtCsvPaymentRowModel->getPaymentCode());
-        self::assertSame($amount, $postLtCsvPaymentRowModel->getAmount());
-        self::assertSame($currency, $postLtCsvPaymentRowModel->getCurrency());
-        self::assertSame($bankTransferCode, $postLtCsvPaymentRowModel->getBankTransferCode());
-        self::assertSame($bankTransferDate, $postLtCsvPaymentRowModel->getBankTransferDate());
+        self::assertSame($postCode, $postLtCsvPaymentRowModel->getRawPostCode());
+        self::assertSame($paymentDate, $postLtCsvPaymentRowModel->getRawPaymentDate());
+        self::assertSame($bankAccountNumber, $postLtCsvPaymentRowModel->getRawBankAccountNumber());
+        self::assertSame($paymentDetails, $postLtCsvPaymentRowModel->getRawPaymentDetails());
+        self::assertSame($additionalInformation, $postLtCsvPaymentRowModel->getRawAdditionalInformation());
+        self::assertSame($payedByName, $postLtCsvPaymentRowModel->getRawPayedByName());
+        self::assertSame($payedByAddress, $postLtCsvPaymentRowModel->getRawPayedByAddress());
+        self::assertSame($paymentCode, $postLtCsvPaymentRowModel->getRawPaymentCode());
+        self::assertSame($amount, $postLtCsvPaymentRowModel->getRawAmount());
+        self::assertSame($currency, $postLtCsvPaymentRowModel->getRawCurrency());
+        self::assertSame($bankTransferCode, $postLtCsvPaymentRowModel->getRawBankTransferCode());
+        self::assertSame($bankTransferDate, $postLtCsvPaymentRowModel->getRawBankTransferDate());
     }
 
     /**
@@ -79,18 +78,18 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
         // it's easier to test using validator service because ValidatorInterface is not public to use in tests.
         $postLtCsvPaymentValidatorService = $this->getContainer()->get(PostLtCsvPaymentValidatorService::class);
         $validRow = [
-            PostLtCsvPaymentRowModel::INPUT_KEY_POST_CODE => $postCode = '01010',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DATE => $paymentDate = '2018.01.01',
-            PostLtCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER => $bankAccountNumber = 'LT357300010133333333',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DETAILS => $paymentDetails = '$paymentDetails',
-            PostLtCsvPaymentRowModel::INPUT_KEY_ADDITIONAL_INFORMATION => $additionalInformation = '$additionalInformation',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYED_BY_NAME => $payedByName = '$payedByName',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYED_BY_ADDRESS => $payedByAddress = '$payedByAddress',
-            PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_CODE => $paymentCode = '123',
-            PostLtCsvPaymentRowModel::INPUT_KEY_AMOUNT => $amount = '1.00',
-            PostLtCsvPaymentRowModel::INPUT_KEY_CURRENCY => $currency = PostLtCsvPaymentRowModel::CURRENCY_EUR,
-            PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_CODE => $bankTransferCode = '2566074',
-            PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_DATE => $bankTransferDate = '2018.01.01',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_POST_CODE => $postCode = '01010',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DATE => $paymentDate = '2018.01.01',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_ACCOUNT_NUMBER => $bankAccountNumber = 'LT357300010133333333',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DETAILS => $paymentDetails = '$paymentDetails',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_ADDITIONAL_INFORMATION => $additionalInformation = '$additionalInformation',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYED_BY_NAME => $payedByName = '$payedByName',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYED_BY_ADDRESS => $payedByAddress = '$payedByAddress',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_CODE => $paymentCode = '123',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_AMOUNT => $amount = '1.00',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_CURRENCY => $currency = PostLtCsvPaymentRowModel::CURRENCY_EUR,
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_CODE => $bankTransferCode = '2566074',
+            PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_DATE => $bankTransferDate = '2018.01.01',
         ];
         // add empty rows at the end to simulate empty "Counter" columns
         for ($index = 0; $index < 12; $index++) {
@@ -126,7 +125,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '1.' => [
                 'assertMessage' => 'Post code cannot be blank.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_POST_CODE] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_POST_CODE] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -138,7 +137,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '2.' => [
                 'assertMessage' => 'Post code must be integer.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_POST_CODE] = '99abc';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_POST_CODE] = '99abc';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -147,7 +146,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '3.' => [
                 'assertMessage' => 'Post code must be positive.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_POST_CODE] = '-1';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_POST_CODE] = '-1';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -156,7 +155,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '4.' => [
                 'assertMessage' => 'Payment date cannot be blank.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DATE] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DATE] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -167,7 +166,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '5.' => [
                 'assertMessage' => 'Payment date must be in correct format (yyyy.mm.dd).',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DATE] = '2011-12-13';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DATE] = '2011-12-13';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -178,7 +177,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '6.' => [
                 'assertMessage' => 'Payment date cannot have trailing characters.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DATE] = '-2011.12.13 00:00';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DATE] = '-2011.12.13 00:00';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -189,7 +188,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '7.' => [
                 'assertMessage' => 'Bank account number cannot be blank.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_ACCOUNT_NUMBER] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -200,7 +199,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '8.' => [
                 'assertMessage' => 'Payment details cannot be blank.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DETAILS] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DETAILS] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -211,7 +210,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '9.' => [
                 'assertMessage' => 'Payed by name cannot be blank.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_PAYED_BY_NAME] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYED_BY_NAME] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -222,7 +221,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '10.' => [
                 'assertMessage' => 'Amount cannot be blank and must be number greater than zero.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_AMOUNT] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_AMOUNT] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -233,7 +232,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '11.' => [
                 'assertMessage' => 'Amount must be formatted as float.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_AMOUNT] = '1';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_AMOUNT] = '1';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -244,7 +243,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '12.' => [
                 'assertMessage' => 'Payment code must be integer.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_CODE] = '99abc';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_CODE] = '99abc';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -253,7 +252,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '13.' => [
                 'assertMessage' => 'Payment code can be blank.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_CODE] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_CODE] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -262,7 +261,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '14.' => [
                 'assertMessage' => 'Amount must be positive.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_AMOUNT] = '-1.00';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_AMOUNT] = '-1.00';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -273,7 +272,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '15.' => [
                 'assertMessage' => 'Currency cannot be blank and must be from supported currency list.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_CURRENCY] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_CURRENCY] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -285,7 +284,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '16.' => [
                 'assertMessage' => 'Bank transfer code cannot be blank.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_CODE] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_CODE] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -297,7 +296,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '17.' => [
                 'assertMessage' => 'Bank transfer code must be integer.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_CODE] = '99abc';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_CODE] = '99abc';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -306,7 +305,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '18.' => [
                 'assertMessage' => 'Bank transfer code must be positive.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_CODE] = '-1';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_CODE] = '-1';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -315,7 +314,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '19.' => [
                 'assertMessage' => 'Bank transfer date cannot be blank.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_DATE] = '';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_DATE] = '';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -326,7 +325,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '20.' => [
                 'assertMessage' => 'Bank transfer date must be in correct format (yyyy.mm.dd).',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_DATE] = '2011-12-13';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_DATE] = '2011-12-13';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -337,7 +336,7 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             '21.' => [
                 'assertMessage' => 'Bank transfer date cannot have trailing characters.',
                 'dataUpdater' => static function (array $row): PostLtCsvPaymentRowModel {
-                    $row[PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_DATE] = '-2011-12-13 00:00';
+                    $row[PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_DATE] = '-2011-12-13 00:00';
 
                     return new PostLtCsvPaymentRowModel('line-1', $row, '');
                 },
@@ -346,69 +345,5 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
                 ],
             ],
         ];
-    }
-
-    /**
-     * @covers ::getAmountInCents
-     *
-     * @dataProvider getAmountInCentsProvider
-     */
-    public function testGetAmountInCents(string $amount, int $expectedAmountInCents): void
-    {
-        /* setup */
-        $row = [PostLtCsvPaymentRowModel::INPUT_KEY_AMOUNT => $amount];
-        /* do */
-        $postLtCsvPaymentRowModel = new PostLtCsvPaymentRowModel($lineId = 'line-1', $row, $sourceString = 'source string');
-        /* assert */
-        self::assertSame($expectedAmountInCents, $postLtCsvPaymentRowModel->getAmountInCents());
-    }
-
-    /** @return mixed[][] */
-    public function getAmountInCentsProvider(): array
-    {
-        return [
-            '0.' => [
-                'amount' => '0.00',
-                'expectedAmountInCents' => 0,
-            ],
-            '1.' => [
-                'amount' => '0.01',
-                'expectedAmountInCents' => 1,
-            ],
-            '2.' => [
-                'amount' => '1.00',
-                'expectedAmountInCents' => 100,
-            ],
-            '3.' => [
-                'amount' => '12345.67',
-                'expectedAmountInCents' => 1234567,
-            ],
-        ];
-    }
-
-    /**
-     * @covers ::getPaymentDateObject
-     */
-    public function testGetPaymentDateObject(): void
-    {
-        /* setup */
-        $row = [PostLtCsvPaymentRowModel::INPUT_KEY_PAYMENT_DATE => '2011.12.13'];
-        /* do */
-        $postLtCsvPaymentRowModel = new PostLtCsvPaymentRowModel($lineId = 'line-1', $row, $sourceString = 'source string');
-        /* assert */
-        self::assertEquals(new DateTimeImmutable('2011-12-13 00:00:00'), $postLtCsvPaymentRowModel->getPaymentDateObject());
-    }
-
-    /**
-     * @covers ::getBankTransferDateObject
-     */
-    public function testGetBankTransferDateObject(): void
-    {
-        /* setup */
-        $row = [PostLtCsvPaymentRowModel::INPUT_KEY_BANK_TRANSFER_DATE => '2011.12.13'];
-        /* do */
-        $postLtCsvPaymentRowModel = new PostLtCsvPaymentRowModel($lineId = 'line-1', $row, $sourceString = 'source string');
-        /* assert */
-        self::assertEquals(new DateTimeImmutable('2011-12-13 00:00:00'), $postLtCsvPaymentRowModel->getBankTransferDateObject());
     }
 }
