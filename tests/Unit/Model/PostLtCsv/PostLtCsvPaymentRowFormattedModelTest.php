@@ -54,9 +54,9 @@ class PostLtCsvPaymentRowFormattedModelTest extends TestCase
     }
 
     /**
-     * @covers ::getPaymentDateObject
+     * @covers ::getPaymentDate
      */
-    public function testGetPaymentDateObject(): void
+    public function testGetPaymentDate(): void
     {
         /* setup */
         $row = [PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_PAYMENT_DATE => '2011.12.13'];
@@ -64,13 +64,13 @@ class PostLtCsvPaymentRowFormattedModelTest extends TestCase
         $postLtCsvPaymentRowModel = new PostLtCsvPaymentRowModel($lineId = 'line-1', $row, $sourceString = 'source string');
         $postLtCsvPaymentRowFormattedModel = new PostLtCsvPaymentRowFormattedModel($postLtCsvPaymentRowModel);
         /* assert */
-        self::assertEquals(new DateTimeImmutable('2011-12-13 00:00:00'), $postLtCsvPaymentRowFormattedModel->getPaymentDateObject());
+        self::assertEquals(new DateTimeImmutable('2011-12-13 00:00:00'), $postLtCsvPaymentRowFormattedModel->getPaymentDate());
     }
 
     /**
-     * @covers ::getBankTransferDateObject
+     * @covers ::getBankTransferDate
      */
-    public function testGetBankTransferDateObject(): void
+    public function testGetBankTransferDate(): void
     {
         /* setup */
         $row = [PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_DATE => '2011.12.13'];
@@ -78,6 +78,6 @@ class PostLtCsvPaymentRowFormattedModelTest extends TestCase
         $postLtCsvPaymentRowModel = new PostLtCsvPaymentRowModel($lineId = 'line-1', $row, $sourceString = 'source string');
         $postLtCsvPaymentRowFormattedModel = new PostLtCsvPaymentRowFormattedModel($postLtCsvPaymentRowModel);
         /* assert */
-        self::assertEquals(new DateTimeImmutable('2011-12-13 00:00:00'), $postLtCsvPaymentRowFormattedModel->getBankTransferDateObject());
+        self::assertEquals(new DateTimeImmutable('2011-12-13 00:00:00'), $postLtCsvPaymentRowFormattedModel->getBankTransferDate());
     }
 }

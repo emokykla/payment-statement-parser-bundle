@@ -28,7 +28,7 @@ class AbstractSwedbankCsvPaymentRowModel
      *
      * @var string
      */
-    protected $lineId;
+    protected $sourceLineId;
     /**
      * Source row array from csv line.
      */
@@ -168,7 +168,7 @@ class AbstractSwedbankCsvPaymentRowModel
      */
     public function __construct(string $lineId, array $sourceRow, string $sourceString)
     {
-        $this->lineId = $lineId;
+        $this->sourceLineId = $lineId;
         $this->sourceRow = $sourceRow;
         $this->sourceString = $sourceString;
         $this->bankAccountNumber = $sourceRow[self::INPUT_KEY_BANK_ACCOUNT_NUMBER] ?? '';
@@ -185,9 +185,9 @@ class AbstractSwedbankCsvPaymentRowModel
         $this->documentNumber = $sourceRow[self::INPUT_KEY_DOCUMENT_NUMBER] ?? '';
     }
 
-    public function getLineId(): string
+    public function getSourceLineId(): string
     {
-        return $this->lineId;
+        return $this->sourceLineId;
     }
 
     /**

@@ -28,7 +28,7 @@ class PostLtCsvPaymentRowModel
      *
      * @var string
      */
-    private $lineId;
+    private $sourceLinedId;
     /**
      * Source row array from csv line.
      */
@@ -141,9 +141,9 @@ class PostLtCsvPaymentRowModel
     /**
      * @param string[] $sourceRow
      */
-    public function __construct(string $lineId, array $sourceRow, string $sourceString)
+    public function __construct(string $sourceLineId, array $sourceRow, string $sourceString)
     {
-        $this->lineId = $lineId;
+        $this->sourceLinedId = $sourceLineId;
         $this->sourceRow = $sourceRow;
         $this->sourceString = $sourceString;
         $this->postCode = $sourceRow[self::CSV_COLUMN_KEY_POST_CODE] ?? '';
@@ -160,9 +160,9 @@ class PostLtCsvPaymentRowModel
         $this->bankTransferDate = $sourceRow[self::CSV_COLUMN_KEY_BANK_TRANSFER_DATE] ?? '';
     }
 
-    public function getLineId(): string
+    public function getSourceLineId(): string
     {
-        return $this->lineId;
+        return $this->sourceLinedId;
     }
 
     /**
@@ -178,62 +178,62 @@ class PostLtCsvPaymentRowModel
         return $this->sourceString;
     }
 
-    public function getRawPostCode(): string
+    public function getPostCode(): string
     {
         return $this->postCode;
     }
 
-    public function getRawPaymentDate(): string
+    public function getPaymentDate(): string
     {
         return $this->paymentDate;
     }
 
-    public function getRawBankAccountNumber(): string
+    public function getBankAccountNumber(): string
     {
         return $this->bankAccountNumber;
     }
 
-    public function getRawPaymentDetails(): string
+    public function getPaymentDetails(): string
     {
         return $this->paymentDetails;
     }
 
-    public function getRawAdditionalInformation(): string
+    public function getAdditionalInformation(): string
     {
         return $this->additionalInformation;
     }
 
-    public function getRawPayedByName(): string
+    public function getPayedByName(): string
     {
         return $this->payedByName;
     }
 
-    public function getRawPayedByAddress(): string
+    public function getPayedByAddress(): string
     {
         return $this->payedByAddress;
     }
 
-    public function getRawPaymentCode(): string
+    public function getPaymentCode(): string
     {
         return $this->paymentCode;
     }
 
-    public function getRawAmount(): string
+    public function getAmount(): string
     {
         return $this->amount;
     }
 
-    public function getRawCurrency(): string
+    public function getCurrency(): string
     {
         return $this->currency;
     }
 
-    public function getRawBankTransferCode(): string
+    public function getBankTransferCode(): string
     {
         return $this->bankTransferCode;
     }
 
-    public function getRawBankTransferDate(): string
+    public function getBankTransferDate(): string
     {
         return $this->bankTransferDate;
     }

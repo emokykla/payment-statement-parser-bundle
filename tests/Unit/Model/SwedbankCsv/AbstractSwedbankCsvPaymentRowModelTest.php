@@ -15,7 +15,7 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
 class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
 {
     /**
-     * @covers ::getLineId
+     * @covers ::getSourceLineId
      * @covers ::getBankAccountNumber
      * @covers ::getRecordType
      * @covers ::getTransactionDate
@@ -47,7 +47,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
         ];
         $swedbankCsvPaymentRowModel = new class ($lineId = 'line-1', $row, $sourceString = 'source string') extends AbstractSwedbankCsvPaymentRowModel {
         };
-        self::assertSame($lineId, $swedbankCsvPaymentRowModel->getLineId());
+        self::assertSame($lineId, $swedbankCsvPaymentRowModel->getSourceLineId());
         self::assertSame($row, $swedbankCsvPaymentRowModel->getSourceRow());
         self::assertSame($sourceString, $swedbankCsvPaymentRowModel->getSourceString());
         self::assertSame($accountNumber, $swedbankCsvPaymentRowModel->getBankAccountNumber());
