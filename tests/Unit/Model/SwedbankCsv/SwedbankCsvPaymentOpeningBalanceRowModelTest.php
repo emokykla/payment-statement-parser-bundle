@@ -26,7 +26,7 @@ class SwedbankCsvPaymentOpeningBalanceRowModelTest extends WebTestCase
         // it's easier to test using validator service because ValidatorInterface is not public to use in tests.
         $swedbankCsvPaymentValidatorService = $this->getContainer()->get(SwedbankCsvPaymentValidatorService::class);
         $validRow = [
-            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER => $accountNumber = '$accountNumber',
+            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER => $accountNumber = '$accountNumber',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE => $recordType = AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_OPENING_BALANCE,
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_DATE => $transactionDate = '2011-12-13',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_PARTY => $party = '$party',

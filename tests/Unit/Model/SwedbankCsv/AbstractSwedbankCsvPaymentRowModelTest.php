@@ -16,7 +16,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
 {
     /**
      * @covers ::getLineId
-     * @covers ::getAccountNumber
+     * @covers ::getBankAccountNumber
      * @covers ::getRecordType
      * @covers ::getTransactionDate
      * @covers ::getParty
@@ -32,7 +32,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
     public function testGetters(): void
     {
         $row = [
-            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER => $accountNumber = '$accountNumber',
+            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER => $accountNumber = '$accountNumber',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE => $recordType = AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_CLOSING_BALANCE,
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_DATE => $transactionDate = '$transactionDate',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_PARTY => $party = '$party',
@@ -50,7 +50,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
         self::assertSame($lineId, $swedbankCsvPaymentRowModel->getLineId());
         self::assertSame($row, $swedbankCsvPaymentRowModel->getSourceRow());
         self::assertSame($sourceString, $swedbankCsvPaymentRowModel->getSourceString());
-        self::assertSame($accountNumber, $swedbankCsvPaymentRowModel->getAccountNumber());
+        self::assertSame($accountNumber, $swedbankCsvPaymentRowModel->getBankAccountNumber());
         self::assertSame($recordType, $swedbankCsvPaymentRowModel->getRecordType());
         self::assertSame($transactionDate, $swedbankCsvPaymentRowModel->getTransactionDate());
         self::assertSame($party, $swedbankCsvPaymentRowModel->getParty());
@@ -80,7 +80,7 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
         // it's easier to test using validator service because ValidatorInterface is not public to use in tests.
         $swedbankCsvPaymentValidatorService = $this->getContainer()->get(SwedbankCsvPaymentValidatorService::class);
         $validRow = [
-            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER => $accountNumber = '$accountNumber',
+            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER => $accountNumber = '$accountNumber',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE => $recordType = AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_CLOSING_BALANCE,
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_DATE => $transactionDate = '2011-12-13',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_PARTY => $party = '$party',
@@ -125,12 +125,12 @@ class AbstractSwedbankCsvPaymentRowModelTest extends WebTestCase
             '1.' => [
                 'assertMessage' => 'Account number cannot be blank.',
                 'dataUpdater' => static function (array $row): AbstractSwedbankCsvPaymentRowModel {
-                    $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER] = '';
+                    $row[AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER] = '';
 
                     return new class ('line-1', $row, '') extends AbstractSwedbankCsvPaymentRowModel {
                     };
                 },
-                'expectedViolations' => ['line-1.accountNumber [0 column] This value should not be blank. Value: "".'],
+                'expectedViolations' => ['line-1.bankAccountNumber [0 column] This value should not be blank. Value: "".'],
             ],
             '2.' => [
                 'assertMessage' => 'Record type cannot be blank and must be from choice list.',
