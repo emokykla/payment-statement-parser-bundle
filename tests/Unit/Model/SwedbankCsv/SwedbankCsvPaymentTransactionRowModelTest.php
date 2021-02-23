@@ -30,7 +30,7 @@ class SwedbankCsvPaymentTransactionRowModelTest extends WebTestCase
         // it's easier to test using validator service because ValidatorInterface is not public to use in tests.
         $swedbankCsvPaymentValidatorService = $this->getContainer()->get(SwedbankCsvPaymentValidatorService::class);
         $validRow = [
-            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER => $accountNumber = '$accountNumber',
+            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER => $accountNumber = '$accountNumber',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE => $recordType = AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_TRANSACTION,
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_TRANSACTION_DATE => $transactionDate = '2011-12-13',
             AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_PARTY => $party = '$party',
@@ -84,47 +84,6 @@ class SwedbankCsvPaymentTransactionRowModelTest extends WebTestCase
                     'line-1.transactionType [9 column] This value should not be blank. Value: "".',
                     'line-1.transactionType [9 column] The value you selected is not a valid choice. Valid choices: "MK". Value: "".',
                 ],
-            ],
-        ];
-    }
-
-    /**
-     * @covers ::getAmountInCents
-     *
-     * @dataProvider getAmountInCentsProvider
-     */
-    public function testGetAmountInCents(string $amount, int $expectedAmountInCents): void
-    {
-        /* setup */
-        $row = [
-            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE => $recordType = AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_TRANSACTION,
-            AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_AMOUNT => $amount,
-        ];
-        /* do */
-        $swedbankCsvPaymentTransactionRowModel = new SwedbankCsvPaymentTransactionRowModel('line-1', $row, '');
-        /* assert */
-        self::assertSame($expectedAmountInCents, $swedbankCsvPaymentTransactionRowModel->getAmountInCents());
-    }
-
-    /** @return mixed[][] */
-    public function getAmountInCentsProvider(): array
-    {
-        return [
-            '0.' => [
-                'amount' => '0.00',
-                'expectedAmountInCents' => 0,
-            ],
-            '1.' => [
-                'amount' => '0.01',
-                'expectedAmountInCents' => 1,
-            ],
-            '2.' => [
-                'amount' => '1.00',
-                'expectedAmountInCents' => 100,
-            ],
-            '3.' => [
-                'amount' => '12345.67',
-                'expectedAmountInCents' => 1234567,
             ],
         ];
     }

@@ -6,7 +6,7 @@ namespace EMO\PaymentStatementParserBundle\Model\SwedbankCsv;
 
 use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\Choice;
-use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
@@ -21,11 +21,37 @@ use function sprintf;
  */
 class AbstractSwedbankCsvPaymentRowModel
 {
+    public const COLUMN_COUNT = 12;
+
     /**
+     * Line identificator, e.g. "line-1".
+     *
+     * @var string
+     */
+    protected $sourceLineId;
+    /**
+     * Source row array from csv line.
+     */
+    protected const PROPERTY_SOURCE_ROW = 'sourceRow';
+    /** @var string[] */
+    protected $sourceRow;
+    /**
+     * Original csv string.
+     *
+     * @var string
+     */
+    protected $sourceString;
+    /**
+     * (Your company) bank account where money where transferred.
      * E.g. LT357300010133333333
      */
-    public const INPUT_KEY_ACCOUNT_NUMBER = 0;
+    public const INPUT_KEY_BANK_ACCOUNT_NUMBER = 0;
+    protected const PROPERTY_BANK_ACCOUNT_NUMBER = 'bankAccountNumber';
+    /** @var string */
+    protected $bankAccountNumber;
     /**
+     * Record type.
+     *
      * 10 - Opening balance
      * 20 - Transaction
      * 82 - Turnover
@@ -39,33 +65,61 @@ class AbstractSwedbankCsvPaymentRowModel
      * @see AbstractSwedbankCsvPaymentRowModel::RECORD_TYPE_ACCRUED_INTEREST
      */
     public const INPUT_KEY_RECORD_TYPE = 1;
+    protected const PROPERTY_RECORD_TYPE = 'recordType';
+    public const RECORD_TYPE_OPENING_BALANCE = '10';
+    public const RECORD_TYPE_TRANSACTION = '20';
+    public const RECORD_TYPE_TURNOVER = '82';
+    public const RECORD_TYPE_CLOSING_BALANCE = '86';
+    public const RECORD_TYPE_ACCRUED_INTEREST = '900';
+    /** @var string */
+    protected $recordType;
     /**
+     * Transaction date.
      * E.g. 2017-09-04
      */
     public const INPUT_KEY_TRANSACTION_DATE = 2;
+    protected const PROPERTY_TRANSACTION_DATE = 'transactionDate';
+    /** @var string */
+    protected $transactionDate;
     /**
-     * Name, ID code, bank code, account number. Separator "|".
+     * Party information. Name, ID code, bank code, account number. Separator "|".
      * E.g. Vardenis Pavardenis | 36508080921 | 36508080921 | AGBLLT2XXXX | LT664010051003333333
      * E.g. Vardenis Pavardenis | AGBLLT2XXXX | LT664010051003333333
      */
     public const INPUT_KEY_PARTY = 3;
+    protected const PROPERTY_PARTY = 'party';
+    /** @var string */
+    protected $party;
     /**
-     * In transaction record type field contains multiple values concatenated with "/" symbol.
+     * Operation details. For "transaction" record type field contains multiple values concatenated with "/" symbol.
      * E.g. XXX 333333/ / / / / / / /
      */
     public const INPUT_KEY_DETAILS = 4;
+    protected const PROPERTY_DETAILS = 'details';
+    /** @var string */
+    protected $details;
     /**
-     * Decimals separated by "." (dot)
+     * Payed amount, decimals separated by "." (dot).
      * E.g. 9.00
      */
     public const INPUT_KEY_AMOUNT = 5;
+    protected const PROPERTY_AMOUNT = 'amount';
+    /** @var string */
+    protected $amount;
     /**
+     * Payment currency.
      * E.g. EUR
      *
      * * @see AbstractSwedbankCsvPaymentRowModel::CURRENCY_EUR
      */
     public const INPUT_KEY_CURRENCY = 6;
+    public const CURRENCY_EUR = 'EUR';
+    protected const PROPERTY_CURRENCY = 'currency';
+    /** @var string */
+    protected $currency;
     /**
+     * Credit/debit indicator.
+     *
      * "K" - Credit transaction
      * "D" - Debit transaction
      *
@@ -73,82 +127,39 @@ class AbstractSwedbankCsvPaymentRowModel
      * @see AbstractSwedbankCsvPaymentRowModel::INDICATOR_DEBIT
      */
     public const INPUT_KEY_DEBIT_CREDIT_INDICATOR = 7;
+    protected const PROPERTY_DEBIT_CREDIT_INDICATOR = 'debitCreditIndicator';
+    public const INDICATOR_CREDIT = 'K';
+    public const INDICATOR_DEBIT = 'D';
+    /** @var string */
+    protected $debitCreditIndicator;
     /**
+     * Transaction reference.
      * E.g. 2017090401228987
      */
     public const INPUT_KEY_TRANSACTION_REFERENCE = 8;
+    protected const PROPERTY_TRANSACTION_REFERENCE = 'transactionReference';
+    /** @var string */
+    protected $transactionReference;
     /**
      * No exact documentation, seems always to be "MK" for transactions, other seen values: MV, S, K2, LS, AS
      */
     public const INPUT_KEY_TRANSACTION_TYPE = 9;
+    protected const PROPERTY_TRANSACTION_TYPE = 'transactionType';
+    public const TRANSACTION_TYPE_MK = 'MK';
+    /** @var string */
+    protected $transactionType;
     /**
      * Always empty, doc says "Not used".
      */
     public const INPUT_KEY_CLIENT_REFERENCE = 10;
+    protected const PROPERTY_CLIENT_REFERENCE = 'clientReference';
+    /** @var string */
+    protected $clientReference;
     /**
      * Customer specific reference.
      */
     public const INPUT_KEY_DOCUMENT_NUMBER = 11;
-
-    public const COLUMN_COUNT = 12;
-
-    public const RECORD_TYPE_OPENING_BALANCE = '10';
-    public const RECORD_TYPE_TRANSACTION = '20';
-    public const RECORD_TYPE_TURNOVER = '82';
-    public const RECORD_TYPE_CLOSING_BALANCE = '86';
-    public const RECORD_TYPE_ACCRUED_INTEREST = '900';
-
-    public const CURRENCY_EUR = 'EUR';
-
-    public const INDICATOR_CREDIT = 'K';
-    public const INDICATOR_DEBIT = 'D';
-
-    public const TRANSACTION_TYPE_MK = 'MK';
-
-    /**
-     * PROPERTY_* constants reflect field names.
-     */
-    protected const PROPERTY_ACCOUNT_NUMBER = 'accountNumber';
-    protected const PROPERTY_RECORD_TYPE = 'recordType';
-    protected const PROPERTY_TRANSACTION_DATE = 'transactionDate';
-    protected const PROPERTY_PARTY = 'party';
-    protected const PROPERTY_DETAILS = 'details';
-    protected const PROPERTY_AMOUNT = 'amount';
-    protected const PROPERTY_CURRENCY = 'currency';
-    protected const PROPERTY_DEBIT_CREDIT_INDICATOR = 'debitCreditIndicator';
-    protected const PROPERTY_TRANSACTION_REFERENCE = 'transactionReference';
-    protected const PROPERTY_TRANSACTION_TYPE = 'transactionType';
-    protected const PROPERTY_CLIENT_REFERENCE = 'clientReference';
     protected const PROPERTY_DOCUMENT_NUMBER = 'documentNumber';
-
-    /** @var string */
-    protected $lineId;
-    /** @var string[] */
-    protected $sourceRow;
-    /** @var string */
-    protected $sourceString;
-    /** @var string */
-    protected $accountNumber;
-    /** @var string */
-    protected $recordType;
-    /** @var string */
-    protected $transactionDate;
-    /** @var string */
-    protected $party;
-    /** @var string */
-    protected $details;
-    /** @var string */
-    protected $amount;
-    /** @var string */
-    protected $currency;
-    /** @var string */
-    protected $debitCreditIndicator;
-    /** @var string */
-    protected $transactionReference;
-    /** @var string */
-    protected $transactionType;
-    /** @var string */
-    protected $clientReference;
     /** @var string */
     protected $documentNumber;
 
@@ -157,10 +168,10 @@ class AbstractSwedbankCsvPaymentRowModel
      */
     public function __construct(string $lineId, array $sourceRow, string $sourceString)
     {
-        $this->lineId = $lineId;
+        $this->sourceLineId = $lineId;
         $this->sourceRow = $sourceRow;
         $this->sourceString = $sourceString;
-        $this->accountNumber = $sourceRow[self::INPUT_KEY_ACCOUNT_NUMBER] ?? '';
+        $this->bankAccountNumber = $sourceRow[self::INPUT_KEY_BANK_ACCOUNT_NUMBER] ?? '';
         $this->recordType = $sourceRow[self::INPUT_KEY_RECORD_TYPE] ?? '';
         $this->transactionDate = $sourceRow[self::INPUT_KEY_TRANSACTION_DATE] ?? '';
         $this->party = $sourceRow[self::INPUT_KEY_PARTY] ?? '';
@@ -174,9 +185,9 @@ class AbstractSwedbankCsvPaymentRowModel
         $this->documentNumber = $sourceRow[self::INPUT_KEY_DOCUMENT_NUMBER] ?? '';
     }
 
-    public function getLineId(): string
+    public function getSourceLineId(): string
     {
-        return $this->lineId;
+        return $this->sourceLineId;
     }
 
     /**
@@ -192,9 +203,9 @@ class AbstractSwedbankCsvPaymentRowModel
         return $this->sourceString;
     }
 
-    public function getAccountNumber(): string
+    public function getBankAccountNumber(): string
     {
-        return $this->accountNumber;
+        return $this->bankAccountNumber;
     }
 
     public function getRecordType(): string
@@ -254,12 +265,17 @@ class AbstractSwedbankCsvPaymentRowModel
 
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
+        /* column count */
+        $metadata->addPropertyConstraints(
+            self::PROPERTY_SOURCE_ROW,
+            [new Count(['min' => self::COLUMN_COUNT, 'max' => self::COLUMN_COUNT])]
+        );
         /**
-         * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER
+         * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER
          */
         $metadata->addPropertyConstraints(
-            self::PROPERTY_ACCOUNT_NUMBER,
-            [new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_ACCOUNT_NUMBER)])]
+            self::PROPERTY_BANK_ACCOUNT_NUMBER,
+            [new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_BANK_ACCOUNT_NUMBER)])]
         );
         /**
          * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_RECORD_TYPE
@@ -297,7 +313,7 @@ class AbstractSwedbankCsvPaymentRowModel
                 new Regex(
                     [
                         'message' => sprintf('[%d column] This value is not valid. Valid formats: "yyyy-mm-dd".', self::INPUT_KEY_TRANSACTION_DATE),
-                        'pattern' => '/\d{4}-\d{2}-\d{2}/',
+                        'pattern' => '/^\d{4}-\d{2}-\d{2}$/',
                     ]
                 ),
             ]
@@ -323,16 +339,10 @@ class AbstractSwedbankCsvPaymentRowModel
             self::PROPERTY_AMOUNT,
             [
                 new NotBlank(['message' => sprintf('[%d column] This value should not be blank.', self::INPUT_KEY_AMOUNT)]),
-                new GreaterThan(
-                    [
-                        'message' => sprintf('[%d column] This value should be greater than 0.', self::INPUT_KEY_AMOUNT),
-                        'value' => 0,
-                    ]
-                ),
                 new Regex(
                     [
                         'message' => sprintf('[%d column] Value must be formatted as float "x.yy".', self::INPUT_KEY_AMOUNT),
-                        'pattern' => '/\d+\.\d{2}/',
+                        'pattern' => '/^\d+\.\d{2}$/',
                     ]
                 ),
             ]
@@ -390,7 +400,7 @@ class AbstractSwedbankCsvPaymentRowModel
                 new Regex(
                     [
                         'message' => sprintf('[%d column] Value must be formatted as 16 digits.', self::INPUT_KEY_TRANSACTION_REFERENCE),
-                        'pattern' => '/\d{16}/',
+                        'pattern' => '/^\d{16}$/',
                     ]
                 ),
             ]

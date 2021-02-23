@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace EMO\PaymentStatementParserBundle\Service\SwedbankCsv;
+namespace EMO\PaymentStatementParserBundle\Service\PostLtCsv;
 
-use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\AbstractSwedbankCsvPaymentRowModel;
+use EMO\PaymentStatementParserBundle\Model\PostLtCsv\PostLtCsvPaymentRowModel;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class SwedbankCsvPaymentValidatorService
+class PostLtCsvPaymentValidatorService
 {
     /** @var ValidatorInterface */
     private $validator;
@@ -18,7 +18,7 @@ class SwedbankCsvPaymentValidatorService
         $this->validator = $validator;
     }
 
-    public function validatePaymentRow(AbstractSwedbankCsvPaymentRowModel $rowModel): ConstraintViolationListInterface
+    public function validatePaymentRow(PostLtCsvPaymentRowModel $rowModel): ConstraintViolationListInterface
     {
         $constraintViolationList = $this->validator
             ->startContext()

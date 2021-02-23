@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace EMO\PaymentStatementParserBundle\Service\SwedbankCsv;
+namespace EMO\PaymentStatementParserBundle\Service\PostLtCsv;
 
 use EMO\PaymentStatementParserBundle\Model\Csv\CsvRowModel;
 use EMO\PaymentStatementParserBundle\Service\Csv\CsvDeserializerService;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 
-class SwedbankCsvPaymentDeserializerService
+class PostLtCsvPaymentDeserializerService
 {
     private const ENCODER_SETTINGS = [
-        CsvEncoder::DELIMITER_KEY => ',',
+        CsvEncoder::DELIMITER_KEY => "\t",
         CsvEncoder::ENCLOSURE_KEY => '"',
         CsvEncoder::KEY_SEPARATOR_KEY => '.',
         CsvEncoder::NO_HEADERS_KEY => true,
@@ -32,7 +32,7 @@ class SwedbankCsvPaymentDeserializerService
     }
 
     /**
-     * @param string $content make sure string comes in UTF-8 encoding {@see SwedbankCsvPaymentDeserializerService::convertEncodingToUtf8}
+     * @param string $content make sure string comes in UTF-8 encoding {@see PostLtCsvPaymentDeserializerService::convertEncodingToUtf8}
      *
      * @return CsvRowModel[]
      */
