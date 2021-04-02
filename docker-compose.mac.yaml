@@ -3,5 +3,5 @@ services:
     php:
         volumes:
             - .:/srv/app
-            - /srv/app/var
+            - ./var:/srv/app/var:delegated
             - ./vendor:/srv/app/vendor:delegated
