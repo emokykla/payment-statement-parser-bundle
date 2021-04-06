@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace EMO\PaymentStatementParserBundle\Factory\SwedbankCsv;
 
+use EMO\PaymentStatementParserBundle\Exception\InvalidStatementContentException;
 use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\AbstractSwedbankCsvPaymentRowModel;
 use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\SwedbankCsvPaymentAccruedInterestRowModel;
 use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\SwedbankCsvPaymentClosingBalanceRowModel;
 use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\SwedbankCsvPaymentOpeningBalanceRowModel;
 use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\SwedbankCsvPaymentTransactionRowModel;
 use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\SwedbankCsvPaymentTurnoverRowModel;
-use RuntimeException;
 
 use function sprintf;
 
@@ -35,7 +35,7 @@ class SwedbankCsvPaymentRowModelFactory
                 return new SwedbankCsvPaymentAccruedInterestRowModel($lineId, $row, $sourceString);
             default:
                 if ($recordType) {
-                    throw new RuntimeException(
+                    throw new InvalidStatementContentException(
                         sprintf(
                             'Could create "%s" class instance, record type "%s" is not implemented.',
                             AbstractSwedbankCsvPaymentRowModel::class,
@@ -44,7 +44,9 @@ class SwedbankCsvPaymentRowModelFactory
                     );
                 }
 
-                throw new RuntimeException(sprintf('Could create "%s" class instance, record type is empty.', AbstractSwedbankCsvPaymentRowModel::class));
+                throw new InvalidStatementContentException(
+                    sprintf('Could create "%s" class instance, record type is empty.', AbstractSwedbankCsvPaymentRowModel::class)
+                );
         }
     }
 }
