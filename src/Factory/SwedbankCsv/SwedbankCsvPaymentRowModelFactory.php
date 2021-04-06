@@ -18,6 +18,8 @@ class SwedbankCsvPaymentRowModelFactory
 {
     /**
      * @param string[] $row
+     *
+     * @throws InvalidStatementContentException
      */
     public function get(string $lineId, array $row, string $sourceString): AbstractSwedbankCsvPaymentRowModel
     {
