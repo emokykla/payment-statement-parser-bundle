@@ -59,14 +59,14 @@ class ImportPostLtCsvPaymentTest extends WebTestCase
         /**
          * Get raw csv values from model.
          */
-        self::assertSame('Vardenė1 Pavardenis1', $postLtCsvPaymentRowModels[0]->getRawPayedByName(), 'Final model data must be encoded in UTF-8.');
+        self::assertSame('Vardenė1 Pavardenis1', $postLtCsvPaymentRowModels[0]->getPayedByName(), 'Final model data must be encoded in UTF-8.');
         /**
          * Use helper methods for some of the raw values.
          */
         $postLtCsvPaymentRowFormattedModel = new PostLtCsvPaymentRowFormattedModel($postLtCsvPaymentRowModels[0]);
         self::assertEquals(
             new DateTimeImmutable('2017-09-07'),
-            $postLtCsvPaymentRowFormattedModel->getPaymentDateObject(),
+            $postLtCsvPaymentRowFormattedModel->getPaymentDate(),
             'String must be correctly converted to date time object.'
         );
     }

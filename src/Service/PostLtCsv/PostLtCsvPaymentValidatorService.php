@@ -22,7 +22,7 @@ class PostLtCsvPaymentValidatorService
     {
         $constraintViolationList = $this->validator
             ->startContext()
-            ->atPath($rowModel->getLineId())
+            ->atPath($rowModel->getSourceLineId())
             ->validate($rowModel)
             ->getViolations()
         ;

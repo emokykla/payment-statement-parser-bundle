@@ -15,14 +15,14 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
 class PostLtCsvPaymentRowModelTest extends WebTestCase
 {
     /**
-     * @covers ::getLineId
+     * @covers ::getSourceLineId
      * @covers ::getAccountNumber
      * @covers ::getRecordType
      * @covers ::getTransactionDate
      * @covers ::getParty
      * @covers ::getDetails
-     * @covers ::getRawAmount
-     * @covers ::getRawCurrency
+     * @covers ::getAmount
+     * @covers ::getCurrency
      * @covers ::getDebitCreditIndicator
      * @covers ::getTransactionReference
      * @covers ::getTransactionType
@@ -46,20 +46,20 @@ class PostLtCsvPaymentRowModelTest extends WebTestCase
             PostLtCsvPaymentRowModel::CSV_COLUMN_KEY_BANK_TRANSFER_DATE => $bankTransferDate = '$bankTransferDate',
         ];
         $postLtCsvPaymentRowModel = new PostLtCsvPaymentRowModel($lineId = 'line-1', $row, $sourceString = 'source string');
-        self::assertSame($lineId, $postLtCsvPaymentRowModel->getLineId());
+        self::assertSame($lineId, $postLtCsvPaymentRowModel->getSourceLineId());
         self::assertSame($row, $postLtCsvPaymentRowModel->getSourceRow());
-        self::assertSame($postCode, $postLtCsvPaymentRowModel->getRawPostCode());
-        self::assertSame($paymentDate, $postLtCsvPaymentRowModel->getRawPaymentDate());
-        self::assertSame($bankAccountNumber, $postLtCsvPaymentRowModel->getRawBankAccountNumber());
-        self::assertSame($paymentDetails, $postLtCsvPaymentRowModel->getRawPaymentDetails());
-        self::assertSame($additionalInformation, $postLtCsvPaymentRowModel->getRawAdditionalInformation());
-        self::assertSame($payedByName, $postLtCsvPaymentRowModel->getRawPayedByName());
-        self::assertSame($payedByAddress, $postLtCsvPaymentRowModel->getRawPayedByAddress());
-        self::assertSame($paymentCode, $postLtCsvPaymentRowModel->getRawPaymentCode());
-        self::assertSame($amount, $postLtCsvPaymentRowModel->getRawAmount());
-        self::assertSame($currency, $postLtCsvPaymentRowModel->getRawCurrency());
-        self::assertSame($bankTransferCode, $postLtCsvPaymentRowModel->getRawBankTransferCode());
-        self::assertSame($bankTransferDate, $postLtCsvPaymentRowModel->getRawBankTransferDate());
+        self::assertSame($postCode, $postLtCsvPaymentRowModel->getPostCode());
+        self::assertSame($paymentDate, $postLtCsvPaymentRowModel->getPaymentDate());
+        self::assertSame($bankAccountNumber, $postLtCsvPaymentRowModel->getBankAccountNumber());
+        self::assertSame($paymentDetails, $postLtCsvPaymentRowModel->getPaymentDetails());
+        self::assertSame($additionalInformation, $postLtCsvPaymentRowModel->getAdditionalInformation());
+        self::assertSame($payedByName, $postLtCsvPaymentRowModel->getPayedByName());
+        self::assertSame($payedByAddress, $postLtCsvPaymentRowModel->getPayedByAddress());
+        self::assertSame($paymentCode, $postLtCsvPaymentRowModel->getPaymentCode());
+        self::assertSame($amount, $postLtCsvPaymentRowModel->getAmount());
+        self::assertSame($currency, $postLtCsvPaymentRowModel->getCurrency());
+        self::assertSame($bankTransferCode, $postLtCsvPaymentRowModel->getBankTransferCode());
+        self::assertSame($bankTransferDate, $postLtCsvPaymentRowModel->getBankTransferDate());
     }
 
     /**

@@ -16,7 +16,7 @@ class SwedbankCsvPaymentClosingBalanceRowModel extends AbstractSwedbankCsvPaymen
     public static function loadValidatorMetadata(ClassMetadata $metadata): void
     {
         /**
-         * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_ACCOUNT_NUMBER
+         * @see AbstractSwedbankCsvPaymentRowModel::INPUT_KEY_BANK_ACCOUNT_NUMBER
          */
         $metadata->addConstraint(
             new Callback(

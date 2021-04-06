@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace EMO\PaymentStatementParserBundle\Tests\Acceptance\SwedbankCsv;
 
+use DateTimeImmutable;
 use EMO\PaymentStatementParserBundle\Factory\SwedbankCsv\SwedbankCsvPaymentRowModelFactory;
 use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\AbstractSwedbankCsvPaymentRowModel;
+use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\SwedbankCsvPaymentTransactionFormattedRowModel;
 use EMO\PaymentStatementParserBundle\Model\SwedbankCsv\SwedbankCsvPaymentTransactionRowModel;
 use EMO\PaymentStatementParserBundle\Service\SwedbankCsv\SwedbankCsvPaymentDeserializerService;
 use EMO\PaymentStatementParserBundle\Service\SwedbankCsv\SwedbankCsvPaymentValidatorService;
@@ -78,5 +80,9 @@ class ImportSwedbankCsvPaymentTest extends WebTestCase
             array_values($transactionModels)[0]->getParty(),
             'Final model data must be encoded in UTF-8.'
         );
+        $swedbankCsvPaymentTransactionFormattedRowModel = new SwedbankCsvPaymentTransactionFormattedRowModel(array_values($transactionModels)[1]);
+        self::assertSame(28350, $swedbankCsvPaymentTransactionFormattedRowModel->getAmountInCents());
+        self::assertEquals(new DateTimeImmutable('2017-09-04 00:00:00'), $swedbankCsvPaymentTransactionFormattedRowModel->getTransactionDate());
+        self::assertSame('XXX 3333333', $swedbankCsvPaymentTransactionFormattedRowModel->getDetailsModel()->getPurposeOfPayment());
     }
 }

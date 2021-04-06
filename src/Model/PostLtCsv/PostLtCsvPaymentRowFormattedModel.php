@@ -23,19 +23,19 @@ class PostLtCsvPaymentRowFormattedModel
 
     public function getAmountInCents(): int
     {
-        return (int) ((float) $this->postLtCsvPaymentRowModel->getRawAmount() * 100);
+        return (int) ((float) $this->postLtCsvPaymentRowModel->getAmount() * 100);
     }
 
-    public function getPaymentDateObject(): DateTimeImmutable
+    public function getPaymentDate(): DateTimeImmutable
     {
-        $dateString = $this->fixDateStringFormat($this->postLtCsvPaymentRowModel->getRawPaymentDate());
+        $dateString = $this->fixDateStringFormat($this->postLtCsvPaymentRowModel->getPaymentDate());
 
         return new DateTimeImmutable($dateString);
     }
 
-    public function getBankTransferDateObject(): DateTimeImmutable
+    public function getBankTransferDate(): DateTimeImmutable
     {
-        $dateString = $this->fixDateStringFormat($this->postLtCsvPaymentRowModel->getRawBankTransferDate());
+        $dateString = $this->fixDateStringFormat($this->postLtCsvPaymentRowModel->getBankTransferDate());
 
         return new DateTimeImmutable($dateString);
     }
