@@ -40,6 +40,7 @@ class SwedbankCsvPaymentTransactionRowModel extends AbstractSwedbankCsvPaymentRo
          */
         $availableTransactionTypes = [
             self::TRANSACTION_TYPE_MK,
+            self::TRANSACTION_TYPE_MV,
         ];
         $metadata->addPropertyConstraints(
             self::PROPERTY_TRANSACTION_TYPE,
