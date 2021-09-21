@@ -80,9 +80,9 @@ class SwedbankCsvPaymentTransactionRowModelTest extends WebTestCase
                     return new SwedbankCsvPaymentTransactionRowModel('line-1', $row, '');
                 },
                 'expectedViolations' => [
-                    'line-1.transactionType [9 column] The value you selected is not a valid choice. Valid choices: "MK". Value: "".',
+                    'line-1.transactionType [9 column] The value you selected is not a valid choice. Valid choices: "MK", "MV". Value: "".',
                     'line-1.transactionType [9 column] This value should not be blank. Value: "".',
-                    'line-1.transactionType [9 column] The value you selected is not a valid choice. Valid choices: "MK". Value: "".',
+                    'line-1.transactionType [9 column] The value you selected is not a valid choice. Valid choices: "MK", "MV". Value: "".',
                 ],
             ],
         ];

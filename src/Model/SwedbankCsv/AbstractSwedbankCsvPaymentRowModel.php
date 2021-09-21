@@ -141,11 +141,14 @@ class AbstractSwedbankCsvPaymentRowModel
     /** @var string */
     protected $transactionReference;
     /**
-     * No exact documentation, seems always to be "MK" for transactions, other seen values: MV, S, K2, LS, AS
+     * No exact documentation then defined for types below. Other seen values: S, K2, LS, AS
      */
     public const INPUT_KEY_TRANSACTION_TYPE = 9;
     protected const PROPERTY_TRANSACTION_TYPE = 'transactionType';
+    /** Local transaction */
     public const TRANSACTION_TYPE_MK = 'MK';
+    /** International payment */
+    public const TRANSACTION_TYPE_MV = 'MV';
     /** @var string */
     protected $transactionType;
     /**
@@ -410,6 +413,7 @@ class AbstractSwedbankCsvPaymentRowModel
          */
         $availableTransactionTypes = [
             self::TRANSACTION_TYPE_MK,
+            self::TRANSACTION_TYPE_MV,
         ];
         $metadata->addPropertyConstraints(
             self::PROPERTY_TRANSACTION_TYPE,
